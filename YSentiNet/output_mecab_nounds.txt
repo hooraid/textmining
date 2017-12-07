@@ -1,0 +1,10 @@
+주판	anger	0
+주판	anticipation	0
+주판	disgust	0
+주판	fear	0
+주판	joy	0
+주판	negative	0
+주판	positive	0
+주판	sadness	0
+주판	surprise	0
+주판	trust	1
