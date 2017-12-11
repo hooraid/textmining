@@ -15,7 +15,7 @@ class YSentiNet(object):
 
     def MakeDict(self,filename = "output_twitter.txt"):
         
-        txt = open(filename, 'r')
+        txt = open(filename, 'r', encoding='UTF8')
         ret = {'filename':filename}
         ret['sentimental']='anger, anticipation, disgust, fear, joy, negative, positive, sadness, surprise, trust'
 
