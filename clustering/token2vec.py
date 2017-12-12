@@ -2,20 +2,28 @@
 
 import os
 import sys
+from preprocess import  *
 
 from gensim import corpora, models
 
-class token2tfidf():
+class token2vec():
     def __init__(self, filename = ""):
         self.filename = filename
 
     def loadTokenfile(self):
         document_file = open(self.filename,"r", encoding="UTF-8") # need try~catch
         docfile2 = []
-
         for line in document_file:
+            line.replace(";", ",")
             docfile2.append(line)
         return docfile2
+
+    def sen2doc(self, sen):
+        pre = preprocess()
+        tokens = pre.pos4sen(sentence=sen)
+        wrap = []
+        wrap.append(tokens)
+        return wrap
 
     def getDocTermMatrix(self, docfile2, condition = 1):
         self.condition = condition # 1 = id+tokens, 2 = only tokens
