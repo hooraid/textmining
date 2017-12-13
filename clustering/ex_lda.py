@@ -1,19 +1,17 @@
 from LDA import *
+import pickle
+import operator
 lda = LDA()
 
 
 # make model (run only first try)
-#lda.makemodel()
+lda.makemodel()
 lda.load()
-#lda.saveSim()
 
-# # load model
-from token2vec import *
-from LDAresult import *
-
+# get dense LDA matrix
+LDAmatrix = pickle.load(open("./data/ldamatrix.txt","rb"))
 
 # # get similarity
-t2v = token2vec()
 matrix = lda.sen2bow('''네 생각으로 하루를 열고
 네 생각으로 텅 빈 하루를 채우고
 내 생각보다 훨씬 커져버린
@@ -52,19 +50,26 @@ matrix = lda.sen2bow('''네 생각으로 하루를 열고
 
 document_topics, word_topic, word_phi = lda.getTopic(matrix)
 
-data = {}
-data['123'] = document_topics
+data={}
+for song in LDAmatrix.keys():
+    sim_value = lda.getSim(document_topics, LDAmatrix[song])
+    data[song] = sim_value
 
-print(data['123'])
+sorted_data = sorted(data.items(), key = operator.itemgetter(1))
 
+songlist = []
+for k in range(0, 10):
+    songlist.append(sorted_data[k])
 
+print(songlist[1])
 
-# dic = t2v.saveDic("./tmp/query_dic.dict", matrix)
-# tf = t2v.calculateTF(matrix)
-# corp = t2v.createBoW(tf, dic)
-#
-# query_lda = lda.getTopic(corp)
-# print(query_lda)
-#
-# sims = lda.getSimLyric(corp)
-# print(sims[0][1])
+lyricf = open("./data/id-lyrics.txt","r",encoding="utf-8")
+
+id_lyric ={}
+for line in lyricf:
+    doc = line.split(";")
+    id_lyric[doc[0]] = doc[1]
+
+for id in songlist :
+    print(id[0])
+    print(id_lyric[id[0]])

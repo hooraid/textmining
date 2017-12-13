@@ -6,7 +6,7 @@ import sys
 from token2vec import *
 
 # load preprocessed lyric file
-filename = "./test.txt"
+filename = "./data/preprocessed_lyric222.txt"
 test = token2vec(filename)
 docfile2 = test.loadTokenfile()
 documents = test.getDocTermMatrix(docfile2, 1)

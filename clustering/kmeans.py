@@ -10,7 +10,6 @@ from gensim import matutils
 
 from sklearn.cluster import KMeans
 
-
 dictionary = corpora.Dictionary.load("./tmp/dictionary.dict") # load dictionary
 corpus = corpora.MmCorpus("./tmp/corpus.mm") # load corpus
 

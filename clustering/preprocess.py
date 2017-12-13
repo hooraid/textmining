@@ -73,7 +73,7 @@ class preprocess() :
         f.close()
 
 def main() :
-    pre = preprocess("./data/lyrics.txt")
+    pre = preprocess("./data/remove_lyrics.txt")
     pre.loadlyric()
     pre.StopwordDic("./data/stopwords_kr.txt")
     doc = pre.postagging()
@@ -81,7 +81,7 @@ def main() :
     for docu in doc:
         str = docu[0]+";"+docu[1]+"\n"
         doc2.append(str)
-    pre.totextfile(doc2, "./data/preprocessed_lyric.txt")
+    pre.totextfile(doc2, "./data/preprocessed_lyric222.txt")
 
 if __name__ == '__main__':
     main()

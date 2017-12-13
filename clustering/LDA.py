@@ -1,4 +1,4 @@
-from gensim import corpora, models, similarities, matutils
+from gensim import corpora, models, matutils
 from preprocess import *
 
 class LDA():
@@ -12,8 +12,9 @@ class LDA():
         self.dictionary = corpora.Dictionary.load(dicfile)  # load dictionary
         self.corpus = corpora.MmCorpus(corfile)  # load corpus
 
-    def makemodel(self):
-        lda = models.LdaModel(self.corpus, id2word=self.dictionary, num_topics=100)
+    def makemodel(self,top_n=100):
+        self.top_n = top_n
+        lda = models.LdaModel(self.corpus, id2word=self.dictionary, num_topics=top_n)
         lda.save("./tmp/lda.model")
         lda.print_topic()
 
@@ -41,6 +42,5 @@ class LDA():
         :return:
         '''
 
-        sim = matutils.cossim(matutils.dense2vec(sentence1), matutils.dense2vec(sentence2)
-)
+        sim = matutils.cossim(matutils.dense2vec(sentence1), matutils.dense2vec(sentence2))
         return sim
