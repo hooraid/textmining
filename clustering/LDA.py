@@ -16,11 +16,11 @@ class LDA():
         self.top_n = top_n
         lda = models.LdaModel(self.corpus, id2word=self.dictionary, num_topics=top_n)
         lda.save("./tmp/lda.model")
-        lda.print_topic()
+        #lda.print_to()
 
     def load(self, filename="./tmp/lda.model"):
         self.model = models.LdaModel.load(filename)
-        #print(self.model.print_topic(1))
+        #print(self.model.print_topics(num_topics=k, num_words=n_words))
 
     def sen2bow(self,sen):
         pre = preprocess()
