@@ -10,7 +10,7 @@ class preprocess() :
 
     def __init__(self, filename=""):
         self.filename = filename
-        self.StopwordDic("./data/stopwords_kr.txt")
+        self.StopwordDic("./clustering/data/stopwords_kr.txt")
 
     def loadlyric(self) :
         f = open(self.filename, "r", encoding="utf-8")
@@ -75,15 +75,15 @@ class preprocess() :
         f.close()
 
 def main() :
-    pre = preprocess("./data/remove_lyrics.txt")
+    pre = preprocess("./clustering/data/remove_lyrics.txt")
     pre.loadlyric()
-    pre.StopwordDic("./data/stopwords_kr.txt")
+    pre.StopwordDic("./clustering/data/stopwords_kr.txt")
     doc = pre.postagging()
     doc2 = []
     for docu in doc:
         str = docu[0]+";"+docu[1]+"\n"
         doc2.append(str)
-    pre.totextfile(doc2, "./data/preprocessed_lyric222.txt")
+    pre.totextfile(doc2, "./clustering/data/preprocessed_lyric222.txt")
 
 if __name__ == '__main__':
     main()

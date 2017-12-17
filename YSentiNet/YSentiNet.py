@@ -5,7 +5,7 @@ import math
 from konlpy.tag import Twitter
 
 class YSentiNet(object):
-    def __init__(self, filename = "output_twitter.txt"):
+    def __init__(self, filename = "YSentiNet/output_twitter.txt"):
         self.net = self.MakeDict(filename=filename)
         self.model = Twitter()
         self.dictionary = filename
@@ -13,7 +13,7 @@ class YSentiNet(object):
         self.category = self.net["sentimental"]
         self.zerosenti = [0,0,0,0,0,0,0,0,0,0]
 
-    def MakeDict(self,filename = "output_twitter.txt"):
+    def MakeDict(self,filename = "YSentiNet/output_twitter.txt"):
         
         txt = open(filename, 'r', encoding='UTF8')
         ret = {'filename':filename}
@@ -56,7 +56,6 @@ class YSentiNet(object):
         score = self.zerosenti
         pprev_token = ""
         prev_token = ""
-        print(tokenized)
         for token in tokenized:
             single_score = self.GetWordScore(token)
             score = list(np.array(score)+np.array(single_score))
@@ -92,6 +91,8 @@ class YSentiNet(object):
         for sc in score:
             sum = sum+sc*sc
         sum = math.sqrt(sum)
+        if sum==0:
+            return self.zerosenti
         for idx in range(len(score)):
             score[idx] = round(score[idx]/sum,3)
         return score

@@ -29,7 +29,7 @@ class YCluster(object):
         self.prepro = Twitter()
 
     def MakeCorpus(self):
-        f = open("tokenized_lyrics.txt", 'r')    
+        f = open("YSentiNet/tokenized_lyrics.txt", 'r')    
         corpus = []
         song_info = []
         for line in f:
@@ -47,19 +47,19 @@ class YCluster(object):
     def Create_tfidf_cluster(self, corpus, clusters = 10):
         tfidf_vectorizer = TfidfVectorizer(max_df=0.9, max_features=200000,min_df=0.01,use_idf=True, ngram_range=(1, 3))
         tfidf_matrix = tfidf_vectorizer.fit_transform(corpus)
-        pickle.dump(tfidf_vectorizer, open("tfidf_vectorizer.pickle", "wb"))
-        pickle.dump(tfidf_matrix, open("tfidf_matrix.pickle", "wb"))    
+        pickle.dump(tfidf_vectorizer, open("YSentiNet/tfidf_vectorizer.pickle", "wb"))
+        pickle.dump(tfidf_matrix, open("YSentiNet/tfidf_matrix.pickle", "wb"))    
 
         num_clusters = clusters
         km = KMeans(n_clusters=num_clusters)
         km.fit(tfidf_matrix)
-        pickle.dump(km, open("km.pickle", "wb"))
+        pickle.dump(km, open("YSentiNet/km.pickle", "wb"))
         return tfidf_vectorizer, tfidf_matrix, km
 
     def Load_tfidf_cluster(self):
-        tfidf_vectorizer = pickle.load(open("tfidf_vectorizer.pickle", "rb"))
-        tfidf_matrix = pickle.load(open("tfidf_matrix.pickle", "rb"))
-        km = pickle.load(open("km.pickle","rb"))
+        tfidf_vectorizer = pickle.load(open("YSentiNet/tfidf_vectorizer.pickle", "rb"))
+        tfidf_matrix = pickle.load(open("YSentiNet/tfidf_matrix.pickle", "rb"))
+        km = pickle.load(open("YSentiNet/km.pickle","rb"))
         return tfidf_vectorizer, tfidf_matrix, km
 
     def GetClusterVector(self, text):
@@ -96,11 +96,11 @@ class YCluster(object):
             for idx in range(len(outVec)):
                 outVec[idx] /= sum
             ret_dict.append(outVec)
-        pickle.dump(ret_dict, open("clu_dict.pickle","wb"))
+        pickle.dump(ret_dict, open("YSentiNet/clu_dict.pickle","wb"))
         return ret_dict
 
     def LoadClusterDictionary(self):
-        ret = pickle.load(open("clu_dict.pickle","rb"))
+        ret = pickle.load(open("YSentiNet/clu_dict.pickle","rb"))
         return ret;
 
     def GetDistance(self,a,b):
