@@ -10,7 +10,7 @@ doc = {}
 
 for line in f:
     id_song = line.split(";")
-    document_topics, word_topic, word_phi = lda.getTopic(lda.sen2bow(id_song[1]))
+    document_topics, word_topic, word_phi = lda.getTopic(lda.sen2bow(id_song[1], doPrepro=False))
     doc[id_song[0]]= document_topics
 f.close()
 

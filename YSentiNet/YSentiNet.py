@@ -56,6 +56,7 @@ class YSentiNet(object):
         score = self.zerosenti
         pprev_token = ""
         prev_token = ""
+        print(tokenized)
         for token in tokenized:
             single_score = self.GetWordScore(token)
             score = list(np.array(score)+np.array(single_score))
@@ -97,8 +98,12 @@ class YSentiNet(object):
 
 #test
 def test():
-    test_lyrics = '''이번 학기도 결국은 언제나처럼 벼락치기로 공부하는데, 생각해보면 중간고사 이후로는 여러가지 프로젝트들이 상호배타적으로 나와서 이리 치이고 저리 치이고 하다가 결국 어영부영 벼락치기해서 기말고사를 보는 것이 패턴이 된 것 같다.
-특히 이번 학기에는 유례 없는 4팀프로젝트+튜터링에 시달리고 결국 어떻게든 다 끝내놓고 나니까 결국 3~4일동안 3과목을 벼락치기해야 하는 상황에 직면했다. (참고로 현재는 저기서 2일 지남) 그럼에도 불구하고 (말로는 던진다 던진다 하고 딴짓은 많이 하면서) 기본적으로는 안던지려고 발악하는 걸 보면 성격은 고치기 힘들구나'''
+    test_lyrics = '''
+머릿속이 복잡한 요즘
+나를 가볍게 안아주며 잘할수 있다고 말해줄 수 있는 그런 사람이 있으면 좋겠다.
+혼자 있기에는 너무 적적한데
+그런 지금 나를 만나주는 사람들이 있다는 건 참 다행이다.
+'''
     mynet = YSentiNet()
     print(mynet.dictionary)
     print(mynet.category)

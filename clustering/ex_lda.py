@@ -1,93 +1,94 @@
 from LDA import *
 import pickle
 import operator
-lda = LDA()
+import numpy as np
+from konlpy.tag import Twitter
 
-# make model (모델생성용! 사용안할 시 주석처리)
-lda = LDA()
-topic_n = 10 # 토픽 개수
-lda.makemodel(topic_n)
+def main(MakeModel = False):
 
-lda.load()
+    # make model (모델생성용! 사용안할 시 주석처리)
+    lda = LDA()
+        
+    if MakeModel:
+        topic_n = 10 # 토픽 개수
+        lda.makemodel(topic_n)
+    lda.load()
+    # get dense LDA matrix
+    LDAmatrix = pickle.load(open("./data/ldamatrix.txt","rb"))
 
-f = open("./data/preprocessed_lyric222.txt","r",encoding="utf-8")
-doc = {}
+    input = '''
+    길었던 새벽 별빛 아래 홀로
+조금 취해버린 나의 맘과
+너의 맘이 우리의 말이
+어느새 갈 곳을 잃었는지
+걷기엔 조금은 지쳤나 봐
+아무도 없는 정류장에 앉아
+너의 이름 불러본다
+내게도 선명히 들려온다
+꼭 잡은 손 마주 앉은 우리
+함께 걷던 거리
+손 내밀며 날 부른 소리
+이른 새벽 지쳐있던 우릴 
+밝혀준 별이
+다가온다
+이제는 부서진 맘 이기적인 난
+네가 없는 첫차를 타고
+참았던 눈물을 흘려본다
+소리 내서 울어본다
+되돌아가고 싶어 미쳐버린 난
+어디론가 크게 외쳐봐도
+소리 없이 네게서 떠나간다
+처음 그곳 제자리로
+꼭 잡은 손 마주 앉은 우리
+함께 걷던 거리
+손 내밀며 날 부른 소리
+이른 새벽 지쳐있던 우릴 
+밝혀준 별이
+다가온다
+이제는 부서진 맘 이기적인 난
+네가 없는 첫차를 타고
+참았던 눈물을 흘려본다
+소리 내서 울어본다
+되돌아가고 싶어 미쳐버린 난
+어디론가 크게 외쳐봐도
+소리 없이 네게서 떠나간다
+처음 그곳 제자리로
+되돌아가고 싶어 미쳐버린 난
+어디론가 크게 외쳐봐도
+소리 없이 네게서 떠나간다
+처음 그곳 제자리로
+    '''
 
-for line in f:
-    id_song = line.split(";")
-    document_topics, word_topic, word_phi = lda.getTopic(lda.sen2bow(id_song[1]))
-    doc[id_song[0]]= document_topics
-f.close()
+    # # get similarity
+    matrix = lda.sen2bow(input)
 
-f2 = open("./data/ldamatrix.txt", "wb")
+    document_topics, word_topic, word_phi = lda.getTopic(matrix)
+    print(document_topics)
+    print(LDAmatrix['30666642'])
+    data={}
+    for song in LDAmatrix.keys():
 
-pickle.dump(doc, f2)
+        sim_value = lda.getSim(document_topics, LDAmatrix[song])
+        data[song] = sim_value
 
-f2.close()
+    sorted_data = sorted(data.items(), key = operator.itemgetter(1), reverse=True)
 
-# !!for test!!
-# get dense LDA matrix
-LDAmatrix = pickle.load(open("./data/ldamatrix.txt","rb"))
+    songlist = []
+    for k in range(0, 5):
+        songlist.append(sorted_data[k])
 
-# # get similarity
-matrix = lda.sen2bow('''네 생각으로 하루를 열고
-네 생각으로 텅 빈 하루를 채우고
-내 생각보다 훨씬 커져버린
-그리움은 원망이 되기도 해
-너에게 늘 나는 부족한 것 같아
-맘처럼 좁혀지지 않던 거리
-그만큼 간절해져서 쉽게 상처받고
-가끔씩은 너무 밉기도 해
-근데 너를 보면 다시 또 사랑에 빠져
-얼었던 마음은 녹아 내리고
-너로 가득 채워
-어쩌면 다 날 위한 연극 같아서
-끝이 아닌 것 같아서
-너 없는 시간들도 너와 함께였어
-네 맘과는 다른 나를 보던
-너와 조금씩 멀어져만 갔던 거리
-그만큼 낯설어져서 쉽게 상처받고
-가끔씩은 너무 밉기도 해
-근데 너를 보면 다시 또 사랑에 빠져
-얼었던 마음은 녹아 내리고
-너로 가득 채워
-어쩌면 다 날 위한 연극 같아서
-끝이 아닌 것 같아서
-너 없는 시간들도 너와 함께였어
-세상의 모든 이별을
-매일 겪는 것 같아
-얼마나 더 많은 시간이 가야
-괜찮아질까
-근데 너를 보면 힘들던 날은 다 잊어
-아팠던 맘은 다 지워 버리고
-너로 다시 채워
-어쩌면 다 날 위한 연극 같아서
-끝이 아닌 것 같아서
-너 없는 시간들도 너와 함께였어
-끝이 아닌 것만 같아서''')
+    lyricf = open("./data/id-lyrics.txt","r",encoding="utf-8")
 
-document_topics, word_topic, word_phi = lda.getTopic(matrix)
+    id_lyric ={}
+    for line in lyricf:
+        doc = line.split(";")
+        id_lyric[doc[0]] = doc[1]
 
-data={}
-for song in LDAmatrix.keys():
-    sim_value = lda.getSim(document_topics, LDAmatrix[song])
-    data[song] = sim_value
+    for id in songlist :
+        print(id[0])
+        print(id[1])
+        print(id_lyric[id[0]])
 
-sorted_data = sorted(data.items(), key = operator.itemgetter(1))
 
-songlist = []
-for k in range(0, 10):
-    songlist.append(sorted_data[k])
-
-print(songlist[1])
-
-lyricf = open("./data/id-lyrics.txt","r",encoding="utf-8")
-
-id_lyric ={}
-for line in lyricf:
-    doc = line.split(";")
-    id_lyric[doc[0]] = doc[1]
-
-for id in songlist :
-    print(id[0])
-    print(id_lyric[id[0]])
+if __name__ == '__main__':
+    main()

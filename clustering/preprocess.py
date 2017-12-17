@@ -10,6 +10,7 @@ class preprocess() :
 
     def __init__(self, filename=""):
         self.filename = filename
+        self.StopwordDic("./data/stopwords_kr.txt")
 
     def loadlyric(self) :
         f = open(self.filename, "r", encoding="utf-8")
@@ -56,6 +57,7 @@ class preprocess() :
         for token in pos_tagged:
               if token[1] == 'Noun' or token[1] == 'Verb' or token[1] == 'Adjective':
                 #remove stopwords
+                if token not in self.stopwords:
                     output.append(token[0])
 
         return output
